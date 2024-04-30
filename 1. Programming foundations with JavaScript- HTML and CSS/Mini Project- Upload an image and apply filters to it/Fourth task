@@ -1,0 +1,67 @@
+#HTML 
+
+<h1 id="t1">Canva's practice</h1>
+
+<canvas id="div1" class="div1">
+</canvas>
+<canvas id="div2" class="div2">
+</canvas>
+
+<input type="button" value="Make orange" onclick="doOrange()">
+<input type="button" value="Make blue" onclick="doBlue()">
+#CSS
+canvas{
+  width:200pt;
+    height:100pt;
+
+    border:1px solid lightgray;
+    
+}
+input{
+  font-size:20pt;
+}
+.div1 {
+  background-color: yellow;
+}
+
+.div2 {
+  background-color: purple;  
+}
+#JS
+function changeColor () {
+  var div1 = document.getElementById("div1");
+  var div2 = document.getElementById("div2");
+  
+  div1.className = "pug";
+  div2.className = "patriot";
+}
+
+function doOrange () {
+  var div2 = document.getElementById("div2");
+  
+  var context = div2.getContext("2d");
+  context.clearRect(0, 0, div2.width, div2.height);
+  
+  div2.style.backgroundColor = "purple";
+}
+
+function doBlue(){
+  // Get the left canvas element. 
+  var div1 = document.getElementById("div1");
+  
+  // use the style.backgroundColor property to change the background color
+  div1.style.backgroundColor = "#3F7FBF";
+  
+  // get the context of the canvas.
+  var context = div1.getContext("2d");
+  
+  // Draw a rectangle.
+  context.fillStyle = "#ff7f50";
+  context.fillRect(10, 10, 60, 60);
+  context.fillRect(80, 10, 60, 60);
+  
+  // adding text to your canvas.
+  context.fillStyle = "yellow";
+  context.font = "20px YuGothic";
+  context.fillText("Hello from Canvas", 10, 90);
+}
