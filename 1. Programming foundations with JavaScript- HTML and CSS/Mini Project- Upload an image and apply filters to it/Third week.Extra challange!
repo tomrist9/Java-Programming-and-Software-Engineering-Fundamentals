@@ -1,0 +1,81 @@
+<header>
+  <h1>Canva's practice</h1>
+</header>
+<!-- change each div element to a canvas element -->
+<canvas id="div1" class="div1">
+</canvas>
+<canvas id="div2" class="div2">
+</canvas>
+
+<!-- remove all but the “Change Color” button and any related functions. -->
+<!-- create two buttons, one for each of two colors you choose -->
+<!-- Have your two new buttons each the appropriate doColor() functions -->
+<input type="button" value="Change pug" onclick="doPug()">
+<input type="button" value="Make blue" onclick="doBlue()">
+
+#CSS
+/* Use CSS to style headers and divs in general */
+body {
+  font-family: 'YuGothic', 'Yu Gothic', sans-serif;
+}
+
+header {
+  color: dimgray; 
+}
+
+/* Specify a width and height for canvas elements */
+canvas {
+  width: 200px;
+  height: 100px;
+  margin: 10px;
+  border: 1px solid lightgray;
+}
+
+.div1 {
+  background-color: #ff7f50;  
+}
+.div2 {
+  background-color: purple;  
+}
+
+#JS
+function changeColor () {
+    var div1 = document.getElementById("div1");
+    var div2 = document.getElementById("div2");
+    
+    div1.className = "div1";
+    div2.className = "div2";
+  }
+  
+  function doPug() {
+    var div2 = document.getElementById("div1");
+    var context = div2.getContext("2d");
+    
+    // Clear canvas
+    context.clearRect(0, 0, div2.width, div2.height);
+    
+    // Change background color
+    div2.style.backgroundColor = "purple";
+  }
+  
+  function doBlue() {
+    // Get the canvas element
+    var div1 = document.getElementById("div1");
+    var context = div1.getContext("2d");
+    
+    // Clear canvas
+    context.clearRect(0, 0, div1.width, div1.height);
+    
+    // Change background color
+    div1.style.backgroundColor = "#3F7FBF";
+  
+    // Draw a rectangle
+    context.fillStyle = "#ff7f50";
+    context.fillRect(10, 10, 60, 60);
+    context.fillRect(80, 10, 60, 60);
+    
+    // Add text
+    context.fillStyle = "yellow";
+    context.font = "20px YuGothic";
+    context.fillText("Hello from Canvas", 10, 90);
+  }
