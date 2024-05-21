@@ -1,0 +1,105 @@
+#html
+<h1> Paint Your Own Picture</h1>
+ <p>Set width: <input type="text" onchange="setWidth(this.value)" /></p>
+ <p>Set height: <input type="text" onchange="setHeight(this.value)" /></p>
+    <canvas id="canvas1" onmousedown="startPaint()" onmousemove="doPaint(event)" onmouseup="endPaint()" width="500" height="500"></canvas>
+
+    <!-- Adding a paragraph below the canvas -->
+    <p>
+        Brush color
+        <!-- Adding an input tag for selecting color -->
+        <input type="color" value="#000000" onchange="changeColor(this.value)">
+
+        <!-- Adding brush size controls -->
+        Brush size:
+        <input type="range" id="sizeInput" min="1" max="50" value="10" oninput="resizeBrush(this.value)">
+        <span id="sizeOutput">10</span>
+    </p>
+
+    <!-- Adding the clear canvas button -->
+    <p>
+        <input type="button" id="clear" value="Clear Canvas" onclick="clearCanvas()">
+    </p> 
+
+#css
+canvas {
+  border: 1px solid #999; 
+}
+#js
+var paintcanvas = document.getElementById("canvas1");
+var context = paintcanvas.getContext("2d");
+var color = 'black';
+var radius = 50;
+// only paint if mouse is  being dragged (moved while the button is pressed)
+var isPainting = false;
+
+function setWidth (value) {
+ if(isNumeric(value)){
+   canvas.width=value;
+ }
+}
+function setHeight (value) {
+ if(isNumeric(value)){
+   canvas.height=value;
+ }
+}
+function clearCanvas () {
+  context.clearRect(0, 0, paintcanvas.width, paintcanvas.height);
+}
+
+ let paintingState = {
+            isPainting: false,
+            radius: 10, // Example radius
+            color: '#000000' // Initial color set to black
+        };
+
+        // Function to start painting
+        function startPaint() {
+            paintingState.isPainting = true;
+        }
+
+        // Function to end painting
+        function endPaint() {
+            paintingState.isPainting = false;
+        }
+
+        // Function to draw a circle on the canvas
+        function paintCircle(x, y, radius, color) {
+            const canvas = document.getElementById('canvas1');
+            const context = canvas.getContext('2d');
+            context.beginPath();
+            context.arc(x, y, radius, 0, Math.PI * 2);
+            context.fillStyle = color;
+            context.fill();
+            context.closePath();
+        }
+
+        // Function to handle painting at specified coordinates
+        function doPaint(event) {
+            if (paintingState.isPainting) {
+                const x = event.offsetX;
+                const y = event.offsetY;
+                paintCircle(x, y, paintingState.radius, paintingState.color);
+            }
+        }
+
+        // Function to change the color
+        function changeColor(newColor) {
+            paintingState.color = newColor;
+        }
+
+        // Function to resize the brush
+        function resizeBrush(newSize) {
+            paintingState.radius = newSize;
+            document.getElementById("sizeOutput").textContent = newSize;
+        }
+
+        // Function to clear the canvas
+        function clearCanvas() {
+            const canvas = document.getElementById('canvas1');
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Ensure painting stops when the mouse is released outside the canvas
+        document.addEventListener('mouseup', endPaint);
