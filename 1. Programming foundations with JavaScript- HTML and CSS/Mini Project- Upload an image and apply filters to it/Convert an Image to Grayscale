@@ -1,0 +1,81 @@
+#html
+ <title>Grayscale Image Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>Grayscale Image Converter</header>
+    <canvas id="can"></canvas>
+  
+    <br>
+    <input type="file" id="fileInput" accept="image/*">
+    <input type="button" value="Upload" onclick="upload()">
+    <input type="button" value="Convert to Grayscale" onclick="makeGray()">
+</body>
+
+#css
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+header {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+canvas {
+    border: 1px solid #000;
+    width: 500px;
+    height: 400px;
+    margin-right: 20px;
+}
+
+input[type="file"],
+input[type="button"] {
+    font-size: 1em;
+    margin: 10px 0;
+}
+
+
+#jS
+// Declare global variables for the original and grayscale images
+var image ;
+
+
+function upload() {
+            var fileInput = document.getElementById("fileInput");
+             image = new SimpleImage(fileInput);
+            var canvas = document.getElementById("can");
+            image.drawTo(canvas);
+        }
+
+
+function makeGray() {
+    // Check if the grayImage is loaded
+
+
+    // Iterate over each pixel in the grayImage
+    for (var pixel of image.values()) {
+        // Get the red, green, and blue values
+        var red = pixel.getRed();
+        var green = pixel.getGreen();
+        var blue = pixel.getBlue();
+
+        // Calculate the average
+        var average = (red + green + blue) / 3;
+
+        // Set the new color to the average value
+        pixel.setRed(average);
+        pixel.setGreen(average);
+        pixel.setBlue(average);
+    }
+
+    // Get the canvas element for the grayscale image
+    var imgcanvas = document.getElementById("can");
+
+    // Draw the grayscale image to the right-hand side canvas
+    image.drawTo(can);
+}
