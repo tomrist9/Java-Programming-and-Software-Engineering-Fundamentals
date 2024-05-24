@@ -1,0 +1,42 @@
+#HTML
+ <title>Image Upload</title>
+<!--     <link rel="stylesheet" href="styles.css"> -->
+    <script src="https://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>Upload and Display Image</header>
+    <canvas id="myCanvas"></canvas>
+    <br>
+   <input type="file" id="fileInput" accept="image/*">
+    <input type="button" value="Upload" onclick="upload()">
+
+#css
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+header {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+canvas {
+    border: 1px solid #000;
+    width: 500px;
+    height: 400px;
+}
+
+input[type="file"] {
+    font-size: 1em;
+    margin: 10px 0;
+}
+#js
+function upload() {
+            var fileInput = document.getElementById("fileInput");
+            var image = new SimpleImage(fileInput);
+            var canvas = document.getElementById("myCanvas");
+            image.drawTo(canvas);
+        }
