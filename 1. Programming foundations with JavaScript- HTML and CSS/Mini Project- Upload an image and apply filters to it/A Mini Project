@@ -1,0 +1,276 @@
+#html
+<head>
+	<title>Image Filter Mini Project</title>
+	<link rel="stylesheet" type="text/css" href="stlye.css">
+</head>
+<body>
+
+<h1>Image Filter</h1>
+<canvas id="canvas"></canvas>
+
+
+<h2 class="nomarginbottom">Load Image:</h2>
+<input id="file" type="file" multiple="false" accept="image/*" onchange="loadImage()">
+
+
+<h2 class="nomarginbottom">Choose Filter:</h2>
+<div class="filters">
+	<input id="btnRed" type="button" value="Red Filter" onclick="makeRed()">
+	<input id="btnRainbow" type="button" value="Rainbow Filter" onclick="makeRainbow()">
+	<input id="btnGrey" type="button" value="Sunset Filter" onclick="makeGrey()">
+  <input id="btnGrey2" type="button" value="Greyscale Filter" onclick="applySunsetGlow()">
+<!--   	<button onclick="applySunsetGlow()">Apply Sunset Glow Filter</button> -->
+
+  <h2 class="nomarginbottom">Reset Image Filter</h2>
+<input id="btnReset" type="button" value="Reset Image" onclick="resetImage()">
+
+
+
+
+
+<!-- Simple Image Library -->
+<script src="https://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"></script>
+<script src="script.js"></script>
+</body>
+
+#css
+body {
+	background: #D9EBF3;
+	font-family: arial;
+	font-size: 16px;
+	color: #333;
+}
+
+#canvas {
+	border: 1px solid;
+	width: 300px;
+}
+
+input {
+	display: block;
+	margin-top: 10px;
+}
+
+input:not([type="file"]) {
+	background: #DEC0C0;
+	border: 0;
+	padding: 8px 20px;
+	cursor: pointer;
+}
+
+input:not([type="file"]):hover {
+	background: #C79292;
+}
+
+.filters input {
+	display: inline-block;
+}
+
+.nomarginbottom {
+	margin-bottom: 0;
+}
+
+#js
+var canvas = document.getElementById("canvas"),
+    originalImage = null,
+    imageGrey = null,
+    imageRed = null,
+    imageRainbow = null,
+    sunsetGlowImage = null;
+
+function loadImage() {
+    var file = document.getElementById("file");
+    originalImage = new SimpleImage(file);
+    imageGrey = new SimpleImage(file);
+    imageRed = new SimpleImage(file);
+    imageRainbow = new SimpleImage(file);
+    sunsetGlowImage = new SimpleImage(file);
+    
+    originalImage.drawTo(canvas);
+}
+
+function filterGrey() {
+    // Reset Image
+    for (var pixel of imageGrey.values()) {
+        var originalPixel = originalImage.getPixel(pixel.getX(), pixel.getY());
+        imageGrey.setPixel(pixel.getX(), pixel.getY(), originalPixel);
+    }
+    
+    // Grey Filter
+    for (var pixel of imageGrey.values()) {
+        var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+        pixel.setRed(avg);
+        pixel.setGreen(avg);
+        pixel.setBlue(avg);
+    }
+    imageGrey.drawTo(canvas);
+}
+
+function printOriginal(img) {
+    img.drawTo(canvas);
+}
+
+function makeRed() {
+    // Reset Image
+    for (var pixel of imageRed.values()) {
+        var originalPixel = originalImage.getPixel(pixel.getX(), pixel.getY());
+        imageRed.setPixel(pixel.getX(), pixel.getY(), originalPixel);
+    }
+    
+    // Red Filter
+    for (var pixel of imageRed.values()) {
+        var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+        if (avg < 128) {
+            pixel.setRed(avg * 2);
+            pixel.setBlue(0);
+            pixel.setGreen(0);
+        } else {
+            pixel.setRed(255);
+            pixel.setGreen(avg * 2 - 255);
+            pixel.setBlue(avg * 2 - 255);
+        }
+    }
+    imageRed.drawTo(canvas);
+}
+
+function makeRainbow() {
+    // Reset Image
+    for (var pixel of imageRainbow.values()) {
+        var originalPixel = originalImage.getPixel(pixel.getX(), pixel.getY());
+        imageRainbow.setPixel(pixel.getX(), pixel.getY(), originalPixel);
+    }
+    
+    // Rainbow Filter
+    for (var pixel of imageRainbow.values()) {
+        var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+        
+        /* ---- Red Strip ----- */
+        if (pixel.getY() <= imageRainbow.getHeight() * (1 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(2 * avg);
+                pixel.setGreen(0);
+                pixel.setBlue(0);
+            } else {
+                pixel.setRed(255);
+                pixel.setGreen(avg * 2 - 255);
+                pixel.setBlue(avg * 2 - 255);
+            }
+        }
+        
+        /* ----- Orange Stripe ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (1 / 7) && pixel.getY() <= imageRainbow.getHeight() * (2 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(2 * avg);
+                pixel.setGreen(0.8 * avg);
+                pixel.setBlue(0);
+            } else {
+                pixel.setRed(255);
+                pixel.setGreen(1.2 * avg - 51);
+                pixel.setBlue(avg * 2 - 255);
+            }
+        }
+        
+        /* ----- Yellow Strip ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (2 / 7) && pixel.getY() <= imageRainbow.getHeight() * (3 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(2 * avg);
+                pixel.setGreen(2 * avg);
+                pixel.setBlue(0);
+            } else {
+                pixel.setRed(255);
+                pixel.setGreen(255);
+                pixel.setBlue(avg * 2 - 255);
+            }
+        }
+        
+        /* ----- Green Strip ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (3 / 7) && pixel.getY() <= imageRainbow.getHeight() * (4 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(0);
+                pixel.setGreen(2 * avg);
+                pixel.setBlue(0);
+            } else {
+                pixel.setRed(avg * 2 - 255);
+                pixel.setGreen(255);
+                pixel.setBlue(avg * 2 - 255);
+            }
+        }
+        
+        /* ----- Blue Strip ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (4 / 7) && pixel.getY() <= imageRainbow.getHeight() * (5 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(0);
+                pixel.setGreen(0);
+                pixel.setBlue(2 * avg);
+            } else {
+                pixel.setRed(avg * 2 - 255);
+                pixel.setGreen(avg * 2 - 255);
+                pixel.setBlue(255);
+            }
+        }
+        
+        /* ----- Indigo Strip ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (5 / 7) && pixel.getY() <= imageRainbow.getHeight() * (6 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(0.8 * avg);
+                pixel.setGreen(0);
+                pixel.setBlue(2 * avg);
+            } else {
+                pixel.setRed(1.2 * avg - 51);
+                pixel.setGreen(avg * 2 - 255);
+                pixel.setBlue(255);
+            }
+        }
+        
+        /* ----- Violet Strip ----- */
+        if (pixel.getY() > imageRainbow.getHeight() * (6 / 7) && pixel.getY() <= imageRainbow.getHeight() * (7 / 7)) {
+            if (avg < 128) {
+                pixel.setRed(1.6 * avg);
+                pixel.setGreen(0);
+                pixel.setBlue(1.6 * avg);
+            } else {
+                pixel.setRed(0.4 * avg + 153);
+                pixel.setGreen(avg * 2 - 255);
+                pixel.setBlue(0.4 * avg + 153);
+            }
+        }
+    }
+    imageRainbow.drawTo(canvas);
+}
+
+function makeGrey() {
+    if (imageGrey != null) {
+        filterGrey();
+    }
+}
+
+function resetImage() {
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    printOriginal(originalImage);
+}
+
+function applySunsetGlow() {
+    // Reset Image
+    for (var pixel of sunsetGlowImage.values()) {
+        var originalPixel = originalImage.getPixel(pixel.getX(), pixel.getY());
+        sunsetGlowImage.setPixel(pixel.getX(), pixel.getY(), originalPixel);
+    }
+    
+    // Sunset Glow Filter
+    for (var pixel of sunsetGlowImage.values()) {
+        var red = pixel.getRed();
+        var green = pixel.getGreen();
+        var blue = pixel.getBlue();
+
+        pixel.setRed(Math.min(255, red * 1.2 + 30));
+        pixel.setGreen(Math.min(255, green * 1.1 + 20));
+        pixel.setBlue(Math.min(255, blue * 0.9));
+
+        var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+        pixel.setRed(Math.min(255, avg + 40));
+        pixel.setGreen(Math.min(255, avg + 20));
+        pixel.setBlue(Math.min(255, avg));
+    }
+    sunsetGlowImage.drawTo(canvas);
+}
